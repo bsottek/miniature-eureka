@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { filterByQuery, findById, createNewNote } = require('../../lib/notes');
+const { filterByQuery, findById, createNewNote, deleteNote } = require('../../lib/notes');
 const { notes } = require('../../data/db');
 
 router.get('/notes', (req, res) => {
@@ -26,5 +26,15 @@ router.post('/notes', (req, res) => {
     const note = createNewNote(req.body, notes);
     res.json(note);
     });
+
+router.delete('/notes/:id', (req, res) => {
+    const result = findById(req.params.id, notes);
+    if (result) {
+        deleteNote(result, notes);
+        res.send('Note deleted');
+    } else {
+        res.sendStatus(404);
+    }
+})
 
 module.exports = router;
